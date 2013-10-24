@@ -43,7 +43,7 @@ PG_MODULE_MAGIC;
 
 #define BASE36_LENGTH      13
 
-typedef long long unsigned int base36;
+typedef long long int base36;
 
 static int base36_digits[36] =
   {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',

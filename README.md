@@ -1,8 +1,8 @@
 # PostgreSQL base36 data type
 
-This datatype is internally an *unsigned bigint*. It inputs and outputs data
-as a number in radix 36, using `[0-9A-Za-z]` (case insensitive) as its
-symbols in input and `[0-9A-Z]` in its output.
+This datatype is internally a *bigint*, but only accepts positive values. It
+inputs and outputs data as a number in radix 36, using `[0-9A-Za-z]` (case
+insensitive) as its symbols in input and `[0-9A-Z]` in its output.
 
 This data type is a quick hack and only has *demo* quality, its shy of a
 brick load of being *production ready*. If you need it for serious work,
@@ -72,3 +72,27 @@ patch attached (they call that a *pull request* around here).
     
     base36# create index on demo(x);
     CREATE INDEX
+
+## Accepted range
+
+    base36# select 'zzzzzzzzzzzzz'::base36;
+    ERROR:  value "zzzzzzzzzzzzz" is out of range for type base36 at character 8
+    STATEMENT:  select 'zzzzzzzzzzzzz'::base36;
+    ERROR:  22003: value "zzzzzzzzzzzzz" is out of range for type base36
+    LINE 1: select 'zzzzzzzzzzzzz'::base36;
+                   ^
+    LOCATION:  base36_from_str, base36.c:102
+
+    base36# select 'zzzzzzzzzzzz'::base36;
+    select 'zzzzzzzzzzzz'::base36;
+        base36    
+    --------------
+     ZZZZZZZZZZZZ
+    (1 row)
+    
+    base36# select 'zzzzzzzzzzzz'::base36::bigint;
+    select 'zzzzzzzzzzzz'::base36::bigint;
+            int8         
+    ---------------------
+     4738381338321616895
+    (1 row)
