@@ -75,24 +75,44 @@ patch attached (they call that a *pull request* around here).
 
 ## Accepted range
 
-    base36# select 'zzzzzzzzzzzzz'::base36;
-    ERROR:  value "zzzzzzzzzzzzz" is out of range for type base36 at character 8
-    STATEMENT:  select 'zzzzzzzzzzzzz'::base36;
-    ERROR:  22003: value "zzzzzzzzzzzzz" is out of range for type base36
-    LINE 1: select 'zzzzzzzzzzzzz'::base36;
-                   ^
-    LOCATION:  base36_from_str, base36.c:102
+The base36 accepted range is the same as the bigint one, albeit only for
+positive numbers:
 
-    base36# select 'zzzzzzzzzzzz'::base36;
-    select 'zzzzzzzzzzzz'::base36;
-        base36    
-    --------------
-     ZZZZZZZZZZZZ
+    base36# select -1::base36;
+    select -1::base36;
+    ERROR:  cannot cast type integer to base36 at character 10
+    STATEMENT:  select -1::base36;
+    ERROR:  42846: cannot cast type integer to base36
+    LINE 1: select -1::base36;
+                     ^
+    LOCATION:  transformTypeCast, parse_expr.c:2247
+    
+    base36# select pg_typeof(9223372036854775807);
+    select pg_typeof(9223372036854775807);
+     pg_typeof 
+    -----------
+     bigint
     (1 row)
     
-    base36# select 'zzzzzzzzzzzz'::base36::bigint;
-    select 'zzzzzzzzzzzz'::base36::bigint;
-            int8         
-    ---------------------
-     4738381338321616895
+    base36# select pg_typeof(9223372036854775808);
+    select pg_typeof(9223372036854775808);
+     pg_typeof 
+    -----------
+     numeric
     (1 row)
+    
+    base36# select 9223372036854775807::base36;
+    select 9223372036854775807::base36;
+        base36     
+    ---------------
+     1Y2P0IJ32E8E7
+    (1 row)
+    
+    base36# select 9223372036854775808::base36;
+    select 9223372036854775808::base36;
+    ERROR:  cannot cast type numeric to base36 at character 27
+    STATEMENT:  select 9223372036854775808::base36;
+    ERROR:  42846: cannot cast type numeric to base36
+    LINE 1: select 9223372036854775808::base36;
+                                      ^
+    LOCATION:  transformTypeCast, parse_expr.c:2247
