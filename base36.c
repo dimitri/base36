@@ -125,10 +125,10 @@ char *base36_to_str(base36 c)
 #endif
     m = m - base36_powers[i] * d;
 
-    discard = discard && d == 0;
+    discard = discard && (d == 0 && i >0);
 
- if( !discard )
-    str[p++] = base36_digits[d];
+    if( !discard )
+       str[p++] = base36_digits[d];
   }
 
   return str;
