@@ -79,28 +79,24 @@ The base36 accepted range is the same as the bigint one, albeit only for
 positive numbers:
 
     base36# select pg_typeof(9223372036854775807);
-    select pg_typeof(9223372036854775807);
      pg_typeof 
     -----------
      bigint
     (1 row)
     
     base36# select pg_typeof(9223372036854775808);
-    select pg_typeof(9223372036854775808);
      pg_typeof 
     -----------
      numeric
     (1 row)
     
     base36# select 9223372036854775807::base36;
-    select 9223372036854775807::base36;
         base36     
     ---------------
      1Y2P0IJ32E8E7
     (1 row)
     
     base36# select 9223372036854775808::base36;
-    select 9223372036854775808::base36;
     ERROR:  cannot cast type numeric to base36 at character 27
     STATEMENT:  select 9223372036854775808::base36;
     ERROR:  42846: cannot cast type numeric to base36
@@ -111,7 +107,6 @@ positive numbers:
 And look at that, as I told you, not *production ready*.
 
     base36# select '-1'::base36;
-    select '-1'::base36;
     ERROR:  value '-' is not a valid digit for type base36. at character 8
     STATEMENT:  select '-1'::base36;
     ERROR:  XX000: value '-' is not a valid digit for type base36.
@@ -120,7 +115,6 @@ And look at that, as I told you, not *production ready*.
     LOCATION:  base36_from_str, base36.c:93
     
     base36# select -1::bigint::base36;
-    select -1::bigint::base36;
      ?column? 
     ----------
            -1
