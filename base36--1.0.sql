@@ -29,7 +29,7 @@ CREATE TYPE base36 (
 	LIKE           = bigint,
 	CATEGORY       = 'N'
 );
-COMMENT ON TYPE base36 IS 'Code AlloPass: [0-9A-Z]{8}';
+COMMENT ON TYPE base36 IS 'bigint written in base36: [0-9A-Z]+';
 
 CREATE OR REPLACE FUNCTION base36(text)
 RETURNS base36
