@@ -78,15 +78,6 @@ patch attached (they call that a *pull request* around here).
 The base36 accepted range is the same as the bigint one, albeit only for
 positive numbers:
 
-    base36# select -1::base36;
-    select -1::base36;
-    ERROR:  cannot cast type integer to base36 at character 10
-    STATEMENT:  select -1::base36;
-    ERROR:  42846: cannot cast type integer to base36
-    LINE 1: select -1::base36;
-                     ^
-    LOCATION:  transformTypeCast, parse_expr.c:2247
-    
     base36# select pg_typeof(9223372036854775807);
     select pg_typeof(9223372036854775807);
      pg_typeof 
@@ -116,3 +107,22 @@ positive numbers:
     LINE 1: select 9223372036854775808::base36;
                                       ^
     LOCATION:  transformTypeCast, parse_expr.c:2247
+
+And look at that, as I told you, not *production ready*.
+
+    base36# select '-1'::base36;
+    select '-1'::base36;
+    ERROR:  value '-' is not a valid digit for type base36. at character 8
+    STATEMENT:  select '-1'::base36;
+    ERROR:  XX000: value '-' is not a valid digit for type base36.
+    LINE 1: select '-1'::base36;
+                   ^
+    LOCATION:  base36_from_str, base36.c:93
+    
+    base36# select -1::bigint::base36;
+    select -1::bigint::base36;
+     ?column? 
+    ----------
+           -1
+    (1 row)
+
